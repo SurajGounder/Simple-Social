@@ -9,7 +9,6 @@ from app.users import auth_backend, current_active_user, fastapi_users
 
 import shutil
 import os
-import uuid
 import tempfile
 
 from pathlib import Path
@@ -114,11 +113,13 @@ async def upload_file(
 
     except Exception as e:
 
+        print(f"Upload Error: {str(e)}")
+
         await session.rollback()
 
         raise HTTPException(
             status_code=500,
-            detail=str(e)
+            detail="File upload failed. Please try again."
         )
 
     finally:
@@ -127,7 +128,7 @@ async def upload_file(
         if temp_file_path and os.path.exists(temp_file_path):
             os.unlink(temp_file_path)
 
-        file.file.close()
+        await file.close()
 
 
 # --------------------------------------------------
@@ -175,7 +176,6 @@ async def get_feed(
                 "email": user_dict.get(post.user_id, "Unknown")
             })
 
-        # IMPORTANT: Return the response
         return {
             "posts": posts_data
         }
@@ -186,5 +186,5 @@ async def get_feed(
 
         raise HTTPException(
             status_code=500,
-            detail=str(e)
+            detail="Unable to load the feed. Please try again."
         )
