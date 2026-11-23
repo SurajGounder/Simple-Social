@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+.ruff_cache/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Database
+*.db
+data/
+
+# Git
+.git/
